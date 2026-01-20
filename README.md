@@ -6,7 +6,7 @@ It allows vulnerability and exploit correlation **without any Internet access** 
 The project consists of two files:
 
 - `build_nvd_bundle.py` – Downloads, normalizes, enriches, and packages CVE data.
-- `vulners-offline.py` – Offline-compatible replacement for the original `vulners.nse` script.
+- `vulners-offline.nse` – Offline-compatible replacement for the original `vulners.nse` script.
 
 The final output is a password-protected ZIP bundle containing:
 - `cve_data.lua` – Offline vulnerability database
@@ -29,4 +29,33 @@ The final output is a password-protected ZIP bundle containing:
 ## Requirements
 
 ```bash
-apt install python3-tqdm
+apt install python3-requests python3-tqdm
+```
+
+## Instructions
+
+1. You must also obtain an NVD API key: https://nvd.nist.gov/developers/request-an-api-key
+
+2. Edit the python script and replace with yout own API Key:
+```python
+API_KEY = "FAKE_API_KEY_REPLACE_ME"
+```
+
+3. Then build the bundle, this will create a password protected zip file. Default password is "infected", update as necessary. 
+```bash
+./build_nvd_bundle.py
+```
+
+4. Extract the zip file with 7-zip on the offline remote host.
+```bash
+7z x offline_vulners_bundle.zip
+```
+
+5. Run Nmap with the vulners-offline.nse
+```bash
+nmap -sV --script=vulners-offline.nse <target>
+```
+
+## Author
+shr1mps
+https://tottix.com
